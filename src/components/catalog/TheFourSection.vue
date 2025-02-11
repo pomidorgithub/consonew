@@ -1,12 +1,7 @@
 <template>
   <section class="w-full pt-8" :class="isDark ? 'bg-neutral-900' : 'bg-white'">
     <div class="w-full">
-      <div
-        :class="[
-          'grid grid-cols-1 md:grid-cols-2 gap-x-1 gap-y-8',
-          isWideView ? 'lg:grid-cols-5' : 'lg:grid-cols-3',
-        ]"
-      >
+      <div :class="['grid grid-cols-1 md:grid-cols-2 gap-x-1 gap-y-8', gridColumns]">
         <!-- Текстовая карточка -->
         <TheTextCard
           title="Осенняя коллекция"
@@ -43,16 +38,31 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useTheme } from '@/composables/useTheme'
 import TheTextCard from './TheTextCard.vue'
 
 const { isDark } = useTheme()
 
-defineProps({
-  isWideView: {
-    type: Boolean,
-    default: false,
+const props = defineProps({
+  viewMode: {
+    type: String,
+    default: 'three',
+    validator: (value) => ['two', 'three', 'five'].includes(value),
   },
+})
+
+const gridColumns = computed(() => {
+  switch (props.viewMode) {
+    case 'two':
+      return 'lg:grid-cols-2'
+    case 'three':
+      return 'lg:grid-cols-3'
+    case 'five':
+      return 'lg:grid-cols-5'
+    default:
+      return 'lg:grid-cols-3'
+  }
 })
 
 const products = [

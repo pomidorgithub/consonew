@@ -1,12 +1,7 @@
 <template>
   <section class="w-full pt-8" :class="isDark ? 'bg-neutral-900' : 'bg-white'">
     <div class="w-full">
-      <div
-        :class="[
-          'grid grid-cols-1 md:grid-cols-2 gap-x-1 gap-y-8',
-          isWideView ? 'lg:grid-cols-5' : 'lg:grid-cols-3',
-        ]"
-      >
+      <div :class="['grid grid-cols-1 md:grid-cols-2 gap-x-1 gap-y-8', gridColumns]">
         <!-- Карточки товаров -->
         <div v-for="(product, index) in products" :key="index" class="group">
           <div class="aspect-[3/4] overflow-hidden mb-4">
@@ -31,48 +26,62 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useTheme } from '@/composables/useTheme'
 
 const { isDark } = useTheme()
 
-defineProps({
-  isWideView: {
-    type: Boolean,
-    default: false,
+const props = defineProps({
+  viewMode: {
+    type: String,
+    default: 'three',
+    validator: (value) => ['two', 'three', 'five'].includes(value),
   },
 })
 
+const gridColumns = computed(() => {
+  switch (props.viewMode) {
+    case 'two':
+      return 'lg:grid-cols-2'
+    case 'three':
+      return 'lg:grid-cols-3'
+    case 'five':
+      return 'lg:grid-cols-5'
+    default:
+      return 'lg:grid-cols-3'
+  }
+})
 // Данные о продуктах
 const products = [
   {
     name: 'Шелковое платье',
     price: '165 000 ₽',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f'
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f',
   },
   {
     name: 'Вечернее платье',
     price: '189 000 ₽',
-    image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956'
+    image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956',
   },
   {
     name: 'Кожаная куртка',
     price: '245 000 ₽',
-    image: 'https://images.unsplash.com/photo-1550614000-4895a10e1bfd'
+    image: 'https://images.unsplash.com/photo-1550614000-4895a10e1bfd',
   },
   {
     name: 'Брючный костюм',
     price: '198 000 ₽',
-    image: 'https://images.unsplash.com/photo-1549062572-544a64fb0c56'
+    image: 'https://images.unsplash.com/photo-1549062572-544a64fb0c56',
   },
   {
     name: 'Блейзер',
     price: '175 000 ₽',
-    image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8'
+    image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8',
   },
   {
     name: 'Пальто',
     price: '285 000 ₽',
-    image: 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543'
-  }
+    image: 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543',
+  },
 ]
 </script>

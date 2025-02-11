@@ -3,15 +3,14 @@
     <!-- Секция с баннером и заголовком -->
     <TheOneSection />
 
-    <!-- Фильтры и сортировка -->
-    <TheFilters v-model:isWideView="isWideView" />
-
-    <!-- Сетка товаров -->
-    <TheProductGrid :is-wide-view="isWideView" />
+    <div>
+      <TheFilters v-model:viewMode="currentViewMode" />
+      <TheProductGrid :view-mode="currentViewMode" />
+    </div>
     <!-- Третья секция -->
     <TheThreeSection />
     <!-- Четвертая секция -->
-    <TheFourSection />
+    <TheFourSection :view-mode="currentViewMode" /> <!-- Добавляем проп -->
     <!-- Пагинация -->
     <ThePagination />
   </main>
@@ -26,5 +25,6 @@ import ThePagination from '../components/catalog/ThePagination.vue'
 import TheThreeSection from '../components/catalog/TheThreeSection.vue'
 import TheFourSection from '../components/catalog/TheFourSection.vue'
 
-const isWideView = ref(false)
+const currentViewMode = ref('three') // Изменили начальное значение с
+
 </script>

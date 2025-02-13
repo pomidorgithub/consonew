@@ -2,15 +2,15 @@
   <TheSidebar :is-open="isSidebarOpen" @close="closeSidebar" />
   <header class="fixed top-0 left-0 right-0 z-50">
     <div
-      class="bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-800"
+      class="bg-white/95 dark:bg-black/95 backdrop-blur-sm border-b border-zinc-100 dark:border-zinc-800 bg-glassmorphism"
     >
       <div class="max-w-[2000px] mx-auto">
         <!-- Основной хедер -->
-        <div class="h-16 px-4 flex items-center justify-between relative">
+        <div class="h-16 px-6 flex items-center justify-between relative">
           <!-- Левая часть -->
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-6">
             <button
-              class="p-2 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+              class="p-4 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
               @click="toggleSidebar"
             >
               <XMarkIcon v-if="isSidebarOpen" class="w-5 h-5" />

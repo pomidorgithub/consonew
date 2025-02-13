@@ -1,8 +1,13 @@
 <template>
-  <div class="max-w-[1920px] mx-auto px-8" :class="isDark ? 'bg-neutral-900' : 'bg-white'">
-    <div class="flex justify-between items-center">
+  <div ref="filterRef" :class="[
+    'max-w-[1920px] mx-auto px-8 transition-all duration-300',
+    isDark ? 'bg-neutral-900' : 'bg-white',
+    isSticky ? 'fixed top-0 left-0 right-0 z-50 shadow-lg' : ''
+  ]">
+    <div class="flex justify-between items-center py-4">
       <div class="flex gap-4">
         <button
+          @click="isSidebarOpen = true"
           class="text-sm flex items-center gap-2"
           :class="isDark ? 'text-white' : 'text-gray-900'"
         >
@@ -80,6 +85,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Подключаем компонент сайдбара -->
+  <TheSidebarFilter v-model="isSidebarOpen" />
+
+  <!-- Placeholder для предотвращения прыжков контента -->
+  <div v-if="isSticky" :style="{ height: filterHeight + 'px' }"></div>
 </template>
 
 <script setup>
@@ -90,8 +101,42 @@ import {
   TableCellsIcon,
 } from '@heroicons/vue/24/outline'
 import { useTheme } from '@/composables/useTheme'
+import { ref, onMounted, onUnmounted } from 'vue'
+import TheSidebarFilter from './TheSidebarFilter.vue'
 
 const { isDark } = useTheme()
+const filterRef = ref(null)
+const isSticky = ref(false)
+const filterHeight = ref(0)
+const initialOffset = ref(0)
+const isSidebarOpen = ref(false)
+
+// Отслеживание скролла
+const handleScroll = () => {
+  if (!filterRef.value) return
+
+  const currentScroll = window.scrollY
+  const headerHeight = 80 // Высота вашего header, настройте под свой размер
+
+  if (currentScroll > initialOffset.value - headerHeight) {
+    isSticky.value = true
+  } else {
+    isSticky.value = false
+  }
+}
+
+onMounted(() => {
+  if (filterRef.value) {
+    filterHeight.value = filterRef.value.offsetHeight
+    initialOffset.value = filterRef.value.offsetTop
+  }
+
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 
 const props = defineProps({
   viewMode: {
@@ -107,3 +152,14 @@ const setViewMode = (mode) => {
   emit('update:viewMode', mode)
 }
 </script>
+
+<style scoped>
+.shadow-lg {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Для темной темы */
+:deep(.dark) .shadow-lg {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+</style>
